@@ -1,7 +1,3 @@
-streamlit
-pandas
-plotly
-
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -14,21 +10,16 @@ def load_data():
     df = pd.read_csv(url)
     return df
 
-# 데이터 불러오기
 df = load_data()
 
-# 데이터 미리보기
 st.subheader("데이터 미리보기")
 st.dataframe(df)
 
-# 시각화 선택
 st.subheader("Plotly 시각화")
 
-# 컬럼 선택
 x_axis = st.selectbox("X축 컬럼 선택", df.columns)
 chart_type = st.selectbox("차트 유형 선택", ["Histogram", "Bar", "Line", "Scatter"])
 
-# 차트 그리기
 fig = None
 if chart_type == "Histogram":
     fig = px.histogram(df, x=x_axis)
