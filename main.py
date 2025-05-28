@@ -1,6 +1,6 @@
-streamlit
-pandas
-plotly
+import streamlit as st
+
+st.title("예제 대시보드")
 
 import streamlit as st
 import pandas as pd
