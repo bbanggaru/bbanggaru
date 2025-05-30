@@ -1,3 +1,4 @@
+url="https://raw.githubusercontent.com/bbanggaru/bbanggaru/cb11b034c3daab256f7c53f6c3ce60a5245da877/Delivery%20-%20Delivery.csv"
 import streamlit as st
 import pandas as pd
 import pydeck as pdk
