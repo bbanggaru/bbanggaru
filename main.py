@@ -1,4 +1,4 @@
-url="https://raw.githubusercontent.com/bbanggaru/bbanggaru/refs/heads/main/delivery_data.csv"
+
 import streamlit as st
 import pandas as pd
 import pydeck as pdk
@@ -9,7 +9,7 @@ st.title("배달 위치 시각화")
 # 데이터 불러오기
 @st.cache_data
 def load_data():
-    url = "https://raw.githubusercontent.com/사용자이름/저장소이름/main/Delivery%20-%20Delivery.csv"
+    url="https://raw.githubusercontent.com/bbanggaru/bbanggaru/refs/heads/main/delivery_data.csv"
     return pd.read_csv(url)
 
 df = load_data()
