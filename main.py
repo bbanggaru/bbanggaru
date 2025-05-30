@@ -1,35 +1,35 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
+import pydeck as pdk
 
-st.title("빵가루 데이터 시각화 대시보드")
+# 제목
+st.title("배달 위치 시각화")
 
+# 데이터 불러오기
 @st.cache_data
 def load_data():
-    url = "https://drive.google.com/uc?export=download&id=1pwfON6doXyH5p7AOBJPfiofYlni0HVVY"
-    df = pd.read_csv(url)
-    return df
+    url = "https://raw.githubusercontent.com/사용자이름/저장소이름/main/Delivery%20-%20Delivery.csv"
+    return pd.read_csv(url)
 
 df = load_data()
 
-st.subheader("데이터 미리보기")
-st.dataframe(df)
-
-st.subheader("Plotly 시각화")
-
-x_axis = st.selectbox("X축 컬럼 선택", df.columns)
-chart_type = st.selectbox("차트 유형 선택", ["Histogram", "Bar", "Line", "Scatter"])
-
-fig = None
-if chart_type == "Histogram":
-    fig = px.histogram(df, x=x_axis)
-elif chart_type == "Bar":
-    fig = px.bar(df, x=x_axis)
-elif chart_type == "Line":
-    fig = px.line(df, x=x_axis)
-elif chart_type == "Scatter":
-    y_axis = st.selectbox("Y축 컬럼 선택", df.columns)
-    fig = px.scatter(df, x=x_axis, y=y_axis)
-
-if fig:
-    st.plotly_chart(fig, use_container_width=True)
+# 지도 시각화
+st.subheader("배달 위치 지도")
+st.pydeck_chart(pdk.Deck(
+    map_style='mapbox://styles/mapbox/streets-v11',
+    initial_view_state=pdk.ViewState(
+        latitude=df['Latitude'].mean(),
+        longitude=df['Longitude'].mean(),
+        zoom=11,
+        pitch=50,
+    ),
+    layers=[
+        pdk.Layer(
+            'ScatterplotLayer',
+            data=df,
+            get_position='[Longitude, Latitude]',
+            get_color='[200, 30, 0, 160]',
+            get_radius=100,
+        ),
+    ],
+))
