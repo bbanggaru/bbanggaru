@@ -1,34 +1,28 @@
-
-import streamlit as st
 import pandas as pd
-import pydeck as pdk
+import streamlit as st
+import plotly.express as px
 
-st.title("배달 위치 시각화")
+# CSV 데이터 불러오기
+df = pd.read_csv('processed_weather_data.csv', encoding='utf-8-sig')
 
-@st.cache_data
-def load_data():
-    url = "https://raw.githubusercontent.com/bbanggaru/bbanggaru/refs/heads/main/delivery_data.csv"
-    return pd.read_csv(url)
+st.title("📊 지역별 기온 및 강수량 시각화")
 
-df = load_data()
+# 지역 선택
+selected_region = st.selectbox("📍 지역 선택", df['지역'])
 
-st.subheader("배달 위치 지도")
-st.pydeck_chart(pdk.Deck(
-    map_style='mapbox://styles/mapbox/streets-v11',
-    initial_view_state=pdk.ViewState(
-        latitude=df['Latitude'].mean(),
-        longitude=df['Longitude'].mean(),
-        zoom=11,
-        pitch=50,
-    ),
-    layers=[
-        pdk.Layer(
-            'ScatterplotLayer',
-            data=df,
-            get_position='[Longitude, Latitude]',
-            get_color='[200, 30, 0, 160]',
-            get_radius=100,
-        ),
-    ],
-))
+# 선택된 지역 필터링
+region_data = df[df['지역'] == selected_region]
+
+# 기온 관련 시각화
+st.subheader(f"🌡️ {selected_region}의 평균, 최저, 최고 기온")
+fig_temp = px.bar(
+    region_data.melt(id_vars='지역', value_vars=['평균기온', '최저기온', '최고기온']),
+    x='variable', y='value', color='variable',
+    labels={'variable': '기온 구분', 'value': '기온(℃)'}
+)
+st.plotly_chart(fig_temp)
+
+# 강수량 시각화
+st.subheader(f"🌧️ {selected_region}의 연간 강수량")
+st.metric(label="합계 강수량 (mm)", value=f"{region_data['합계강수량'].values[0]:.1f}")
 
